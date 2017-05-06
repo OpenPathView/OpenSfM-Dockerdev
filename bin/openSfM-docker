@@ -1,0 +1,3 @@
+#!/bin/bash 
+
+docker run -e command=$1 -e folderData=$2 --volumes-from opensfmstore opv/opensfm-dev

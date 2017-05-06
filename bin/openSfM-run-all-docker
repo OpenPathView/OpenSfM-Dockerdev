@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+
+set -e
+
+SCRIPT_DIR="$HOME/opv/prog/OpenSfM_utils"
+
+# use venv
+. ~/.virtualenvs/OpenSfM_utils/bin/activate
+
+openSfM-docker extract_metadata $1
+for x in exif/*; do 
+    echo $x | 
+        awk -F '.' '{print $1}' | 
+        sed -e 's_exif/__' |
+        xargs -i python $SCRIPT_DIR/update_exif.py $(pwd)/$x {} 1
+done
+
+
+openSfM-docker detect_features $1
+openSfM-docker match_features $1
+openSfM-docker create_tracks $1
+openSfM-docker reconstruct $1
+openSfM-docker mesh $1
