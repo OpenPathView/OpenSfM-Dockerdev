@@ -18,19 +18,21 @@ Check the image is correctly build :
 docker images
 ```
 
-### Create the docker image
+### Create the OPV/OpenSFM docker image
 
-Build a docker image.
+Clone this repository and build it's docker image.
 ```bash
+git clone git@github.com:OpenPathView/OpenSfM-Dockerdev.git
+cd OpenSfM-Dockerdev/
 docker build -t opv/opensfm-dev .
 ```
 
 ### Configure the shared folder
 
-If OpenSfM's data are stored in $DATADIR. You have an [exemple set of data here](https://github.com/mapillary/OpenSfM/tree/master/data).
+OpenSfM's data are stored in $DATADIR. You have an [exemple set of data here](https://github.com/mapillary/OpenSfM/tree/master/data).
 
 ```bash
-export DATADIR=mapillary/OpenSfM/data
+export DATADIR=fullPath/mapillary/OpenSfM/data
 docker create -v $DATADIR:/data --name opensfmstore opv/opensfm-dev /bin/true
 ```
 
@@ -40,5 +42,10 @@ if the data you want to treat is in $DATADIR/$FOLDERNAME:
 
 ```bash
 export FOLDERNAME=berlin
-docker run -e folderData=$FOLDERNAME --volumes-from opensfmstore opv/opensfm-dev
+docker run -e folderData=$FOLDERNAME -e command=extract_metadata --volumes-from opensfmstore opv/opensfm-dev
 ```
+
+### Commands
+Commands are : 'extract_metadata', 'detect_features', 'match_features', 'create_tracks', 'reconstruct', 'mesh', 'undistort', 'compute_depthmaps', 'export_ply', 'export_openmvs', 'export_visualsfm'
+
+TODO document those commands.
